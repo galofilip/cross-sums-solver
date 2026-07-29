@@ -1,13 +1,14 @@
-### cross-sums-solver
+# cross-sums-solver
 
 ## to run( :
 > ⚠️ **WARNING:** currently works only for android but i am not really planing on making a version that works for iphone)
-# requirements(these are the versions of my languages but i dont know if it will work with older/newer versions but it will probbly work with newer):
+### requirements
+### (these are the versions of my languages but i dont know if it will work with older/newer versions but it will probbly work with newer):
 1. go 1.26.5
 2. python 3.14.6
 3. adb cli
 
-# stages:
+### stages:
 1. turn on developer options on your phone
 2. in developer options turn on wireless debuging 
 3. press "Pair device with with pairing code" 
