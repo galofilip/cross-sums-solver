@@ -34,10 +34,14 @@ func main() {
 	}
 }
 
+func con2phone()(error){
+	
+}
+
 func bigImg2smallImgs() (string, error) {
 	fmt.Println("hello world")
-	//dir := "/data/data/com.termux/files/home/storage/dcim/Screenshots/Screenshot_20260729_130216_Offline Games.jpg"
-	dir := "/home/philips/Projects/goWork/big_3.jpg"
+	dir := "/data/data/com.termux/files/home/storage/dcim/Screenshots/Screenshot_20260729_130216_Offline Games.jpg"
+//	dir := "/home/philips/Projects/goWork/big_3.jpg"
 	file, err := os.Open(dir)
 	if err != nil {
 		return "", errors.New(fmt.Sprintf("Failed to open image: %v", err))
@@ -114,7 +118,7 @@ func findNums(filePaths string) ([9][9]int, error) {
 }
 
 func createImages(i, j int, imageNum *image.RGBA, filePaths *string) (error){
-	n := fmt.Sprintf("temp/output_%d_%d.jpeg", i, j)
+	n := fmt.Sprintf("./temp/output_%d_%d.jpeg", i, j)
 	*filePaths += n + ","
 	outFile, err := os.Create(n)
 	if err != nil {
