@@ -15,11 +15,16 @@ import (
 )
 
 func main() {
-	filePaths := bigImg2smallImgs()
-	if filePaths == "" {
+	filePaths, err := bigImg2smallImgs()
+	if err != nil {
+		fmt.Print(err)
 		return
 	}
-	nums := findNums(filePaths)
+	nums, err := findNums(filePaths)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
 	solvedNums := solve(nums)
 	for _, row := range solvedNums {
 		for _, val := range row {
