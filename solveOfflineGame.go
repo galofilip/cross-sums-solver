@@ -14,8 +14,8 @@ import (
 	"time"
 )
 
-const startX = 46 + 111
-const startY = 581 + 111
+const startX = 46
+const startY = 581
 
 func main() {
 	filePaths, err := bigImg2smallImgs()
@@ -29,6 +29,9 @@ func main() {
 		return
 	}
 	solvedNums := solve(nums)
+        fmt.Println("in 10nseconds your screen will be pressed, ro press on nums please switch to the game to make the program work")
+        time.Sleep(10 * time.Second)
+	
 	err = press(solvedNums)
 	if err != nil {
 		fmt.Println(err)
@@ -44,15 +47,28 @@ func main() {
 
 func bigImg2smallImgs() (string, error) {
 	fmt.Println("in 10 seconds a screen shot will be taken, make sure your phone will be on the cross-sum game")
-	time.Sleep(10)
-	cmd := exec.Command("adb", "exec-out", "screencap", "-p", ">", "sc.jpg")
-	err := cmd.Run()
+	time.Sleep(10 * time.Second)
+
+	out, err := os.Create("./sc.jepg")
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	cmd := exec.Command("adb", "exec-out", "screencap", "-j")
+	cmd.Stdout = out
+	err = cmd.Run()
+	if err != nil {
+		return "", err
+	}
+
+
 	if err != nil {
 		return "", err
 	}
 	fmt.Println("the screenshot has been taken successfully\nsolving...")
 
-	dir := "./sc.jpg"
+	dir := "./sc.jepg"
 //	dir := "/home/philips/Projects/goWork/big_3.jpg"
 	file, err := os.Open(dir)
 	if err != nil {
@@ -218,7 +234,7 @@ func press(solvedNums [9][9]int)(error){
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == -1 {
-				fmt.Println("x: ", (startX+(i+1)*111+56), ", y: ", (startY+(j+1)*111+56))
+				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
 				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(i+1)*111+56), strconv.Itoa(startY+(j+1)*111+56))
 				err := cmd.Run()
 				if err != nil {
