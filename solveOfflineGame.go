@@ -4,43 +4,55 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/disintegration/gift"
 	"image"
 	"image/jpeg"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-
-	"github.com/disintegration/gift"
+	"time"
 )
+
+const startX = 46 + 111
+const startY = 581 + 111
 
 func main() {
 	filePaths, err := bigImg2smallImgs()
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return
 	}
 	nums, err := findNums(filePaths)
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return
 	}
 	solvedNums := solve(nums)
-	for _, row := range solvedNums {
+	err = press(solvedNums)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+/*	for _, row := range solvedNums {
 		for _, val := range row {
 			fmt.Printf("%-3d", val)
 		}
 		fmt.Println()
-	}
-}
-
-func con2phone()(error){
-	
+	}*/
 }
 
 func bigImg2smallImgs() (string, error) {
-	fmt.Println("hello world")
-	dir := "/data/data/com.termux/files/home/storage/dcim/Screenshots/Screenshot_20260729_130216_Offline Games.jpg"
+	fmt.Println("in 10 seconds a screen shot will be taken, make sure your phone will be on the cross-sum game")
+	time.Sleep(10)
+	cmd := exec.Command("adb", "exec-out", "screencap", "-p", ">", "sc.jpg")
+	err := cmd.Run()
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("the screenshot has been taken successfully\nsolving...")
+
+	dir := "./sc.jpg"
 //	dir := "/home/philips/Projects/goWork/big_3.jpg"
 	file, err := os.Open(dir)
 	if err != nil {
@@ -168,6 +180,7 @@ func solve(nums [9][9]int) [9][9]int {
 			}
 		}
 	}
+	fmt.Println("solved!")
 	return nums
 }
 
@@ -199,6 +212,38 @@ func recSolve(line [9]int, i int, times *[9]int) {
 		line[i] = 0
 		recSolve(line, i+1, times)
 	}
+}
+
+func press(solvedNums [9][9]int)(error){
+	for i, row := range solvedNums[1:] {
+		for j, val := range row[1:] {
+			if val == -1 {
+				fmt.Println("x: ", (startX+(i+1)*111+56), ", y: ", (startY+(j+1)*111+56))
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(i+1)*111+56), strconv.Itoa(startY+(j+1)*111+56))
+				err := cmd.Run()
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(612), strconv.Itoa(1850))
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	for i, row := range solvedNums {
+		for j, val := range row {
+			if val == 0 {
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+i*111+56), strconv.Itoa(startY+j*111+56))
+				err := cmd.Run()
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
 }
 
 //take image
