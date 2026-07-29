@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -28,20 +29,18 @@ func main() {
 	}
 }
 
-func bigImg2smallImgs() string {
+func bigImg2smallImgs() (string, error) {
 	fmt.Println("hello world")
-	//dir := "/data/data/com.termux/files/home/storage/dcim/Screenshots/Screenshot_20260717_094107_Offline Games.jpg"
+	//dir := "/data/data/com.termux/files/home/storage/dcim/Screenshots/Screenshot_20260729_130216_Offline Games.jpg"
 	dir := "/home/philips/Projects/goWork/big_3.jpg"
 	file, err := os.Open(dir)
 	if err != nil {
-		fmt.Printf("Failed to open image: %v", err)
-		return ""
+		return "", errors.New(fmt.Sprintf("Failed to open image: %v", err))
 	}
 	defer file.Close()
 	img, _, err := image.Decode(file)
 	if err != nil {
-		fmt.Printf("Failed to decode image: %v", err)
-		return ""
+		return "", errors.New(fmt.Sprintf("Failed to decode image: %v", err))
 	}
 	file.Close()
 	r := image.Rect(46, 581, 1046, 1581)
@@ -64,13 +63,16 @@ func bigImg2smallImgs() string {
 			imageNum := image.NewRGBA(g.Bounds(dstImg.Bounds()))
 			g.Draw(imageNum, dstImg)
 
-			createImages(i, j, imageNum, &filePaths)
+			err := createImages(i, j, imageNum, &filePaths)
+			if err != nil {
+				return filePaths, err
+			}
 		}
 	}
-	return filePaths
+	return filePaths, nil
 }
 
-func findNums(filePaths string) [9][9]int {
+func findNums(filePaths string) ([9][9]int, error) {
 	cmd := exec.Command("./venv/bin/python", "recognition.py", filePaths)
 
 	var out bytes.Buffer
@@ -80,8 +82,7 @@ func findNums(filePaths string) [9][9]int {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Python script failed: %v\nPython Error Log:\n%s", err, stderr.String())
-		return [9][9]int{}
+		return [9][9]int{}, errors.New(fmt.Sprintf("Python script failed: %v\nPython Error Log:\n%s", err, stderr.String()))
 	}
 
 	resultStr := strings.TrimSpace(out.String())
@@ -100,21 +101,19 @@ func findNums(filePaths string) [9][9]int {
 			strNums = strNums[1:]
 			nums[i][j], err = strconv.Atoi(first)
 			if err != nil {
-				fmt.Printf("error in casting python answer to int: %v", err)
-				return [9][9]int{}
+				return [9][9]int{}, errors.New(fmt.Sprintf("error in casting python answer to int: %v", err))
 			}
 		}
 	}
-	return nums
+	return nums, nil
 }
 
-func createImages(i, j int, imageNum *image.RGBA, filePaths *string) {
+func createImages(i, j int, imageNum *image.RGBA, filePaths *string) (error){
 	n := fmt.Sprintf("temp/output_%d_%d.jpeg", i, j)
 	*filePaths += n + ","
 	outFile, err := os.Create(n)
 	if err != nil {
-		fmt.Printf("Failed to create a file for the black-white jpeg: %v", err)
-		return
+		return errors.New(fmt.Sprintf("Failed to create a file for the black-white jpeg: %v", err))
 	}
 	defer outFile.Close()
 
@@ -122,8 +121,9 @@ func createImages(i, j int, imageNum *image.RGBA, filePaths *string) {
 
 	err = jpeg.Encode(outFile, imageNum, options)
 	if err != nil {
-		fmt.Printf("Failed to encode the black-white image into jpeg file: %v", err)
+		return errors.New(fmt.Sprintf("Failed to encode the black-white image into jpeg file: %v", err))
 	}
+	return nil
 }
 
 func solve(nums [9][9]int) [9][9]int {
