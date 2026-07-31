@@ -14,8 +14,8 @@ import (
 	"time"
 )
 
-const startX = 46
-const startY = 581
+const startX = 44
+const startY = 582
 
 func main() {
 	for range 3 {
@@ -57,11 +57,6 @@ func bigImg2smallImgs() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-
-	if err != nil {
-		return "", err
-	}
 	fmt.Println("the screenshot has been taken successfully\nsolving...")
 
 	dir := "./sc.jepg"
@@ -76,7 +71,7 @@ func bigImg2smallImgs() (string, error) {
 		return "", errors.New(fmt.Sprintf("Failed to decode image: %v", err))
 	}
 	file.Close()
-	r := image.Rect(46, 581, 1046, 1581)
+	r := image.Rect(startX, startY, startX+1008, startY+1008)
 	g := gift.New(
 		gift.Crop(r),
 		gift.Threshold(50.0),
@@ -91,7 +86,7 @@ func bigImg2smallImgs() (string, error) {
 			if i == 0 && j == 0 {
 				continue
 			}
-			r := image.Rect(j*111, i*111, (j+1)*111, (i+1)*111)
+			r := image.Rect(j*112, i*112, (j+1)*112, (i+1)*112)
 			g := gift.New(gift.Crop(r))
 			imageNum := image.NewRGBA(g.Bounds(dstImg.Bounds()))
 			g.Draw(imageNum, dstImg)
@@ -160,7 +155,7 @@ func createImages(i, j int, imageNum *image.RGBA, filePaths *string) (error){
 }
 
 func solve(nums [9][9]int) [9][9]int {
-	for range 10 {
+	for range 13 {
 		for i, num := range nums[1:] {
 			times := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 			recSolve(num, 1, &times)
@@ -230,8 +225,8 @@ func press(solvedNums [9][9]int)(error){
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == -1 {
-				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*111+56), strconv.Itoa(startY+(i+1)*111+56))
+				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*112+56), ", y: ", (startY+(i+1)*112+56))
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*112+56), strconv.Itoa(startY+(i+1)*112+56))
 				err := cmd.Run()
 				if err != nil {
 					return err
@@ -247,8 +242,8 @@ func press(solvedNums [9][9]int)(error){
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == 0 {
-				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*111+56), strconv.Itoa(startY+(i+1)*111+56))
+				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*112+56), ", y: ", (startY+(i+1)*112+56))
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*112+56), strconv.Itoa(startY+(i+1)*112+56))
 				err := cmd.Run()
 				if err != nil {
 					return err
