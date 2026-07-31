@@ -18,26 +18,24 @@ const startX = 44
 const startY = 582
 
 func main() {
-	for range 3 {
-		filePaths, err := bigImg2smallImgs()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		nums, err := findNums(filePaths)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		solvedNums := solve(nums)
-		fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
-		time.Sleep(10 * time.Second)
+	filePaths, err := bigImg2smallImgs()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	nums, err := findNums(filePaths)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	solvedNums := solve(nums)
+	fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
+	time.Sleep(10 * time.Second)
 
-		err = press(solvedNums)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+	err = press(solvedNums)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
 }
 
@@ -74,7 +72,8 @@ func bigImg2smallImgs() (string, error) {
 	r := image.Rect(startX, startY, startX+1008, startY+1008)
 	g := gift.New(
 		gift.Crop(r),
-		gift.Threshold(50.0),
+		gift.Invert(),
+		gift.Threshold(65.0),
 	)
 	dstImg := image.NewRGBA(g.Bounds(img.Bounds()))
 	g.Draw(dstImg, img)
