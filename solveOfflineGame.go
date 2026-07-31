@@ -250,7 +250,7 @@ func press(solvedNums [9][9]int)(error){
 	}
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
-			if val == -1 {
+			if val == 0 {
 				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
 				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*111+56), strconv.Itoa(startY+(i+1)*111+56))
 				err := cmd.Run()
