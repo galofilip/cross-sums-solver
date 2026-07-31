@@ -240,6 +240,7 @@ func press(solvedNums [9][9]int)(error){
 				if err != nil {
 					return err
 				}
+				fmt.Scanln()
 			}
 		}
 	}
@@ -248,14 +249,16 @@ func press(solvedNums [9][9]int)(error){
 	if err != nil {
 		return err
 	}
-	for i, row := range solvedNums {
-		for j, val := range row {
-			if val == 0 {
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+i*111+56), strconv.Itoa(startY+j*111+56))
+	for i, row := range solvedNums[1:] {
+		for j, val := range row[1:] {
+			if val == -1 {
+				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(i+1)*111+56), strconv.Itoa(startY+(j+1)*111+56))
 				err := cmd.Run()
 				if err != nil {
 					return err
 				}
+				fmt.Scanln()
 			}
 		}
 	}
