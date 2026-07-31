@@ -154,7 +154,7 @@ func createImages(i, j int, imageNum *image.RGBA, filePaths *string) (error){
 }
 
 func solve(nums [9][9]int) [9][9]int {
-	for range 13 {
+	for con(nums) {
 		for i, num := range nums[1:] {
 			times := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 			recSolve(num, 1, &times)
@@ -251,6 +251,17 @@ func press(solvedNums [9][9]int)(error){
 		}
 	}
 	return nil
+}
+
+func con(solvedNums [9][9]int)(bool){
+	for _, row := range solvedNums {
+		for _, val := range row {
+			if val != -1 && val != 0{
+				return true
+			}
+		}
+	}
+	return false
 }
 
 //take image
