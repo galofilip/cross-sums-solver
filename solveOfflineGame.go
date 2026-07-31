@@ -29,7 +29,7 @@ func main() {
 		return
 	}
 	solvedNums := solve(nums)
-        fmt.Println("in 10nseconds your screen will be pressed, ro press on nums please switch to the game to make the program work")
+        fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
         time.Sleep(10 * time.Second)
 	
 	err = press(solvedNums)
@@ -231,8 +231,6 @@ func recSolve(line [9]int, i int, times *[9]int) {
 }
 
 func press(solvedNums [9][9]int)(error){
-//	offsetX := 124
-//	offsetY := -100
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == -1 {
@@ -242,7 +240,6 @@ func press(solvedNums [9][9]int)(error){
 				if err != nil {
 					return err
 				}
-				fmt.Scanln()
 			}
 		}
 	}
@@ -255,12 +252,11 @@ func press(solvedNums [9][9]int)(error){
 		for j, val := range row[1:] {
 			if val == -1 {
 				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*111+56), ", y: ", (startY+(i+1)*111+56))
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(i+1)*111+56), strconv.Itoa(startY+(j+1)*111+56))
+				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*111+56), strconv.Itoa(startY+(i+1)*111+56))
 				err := cmd.Run()
 				if err != nil {
 					return err
 				}
-				fmt.Scanln()
 			}
 		}
 	}
