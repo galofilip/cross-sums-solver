@@ -18,31 +18,27 @@ const startX = 46
 const startY = 581
 
 func main() {
-	filePaths, err := bigImg2smallImgs()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	nums, err := findNums(filePaths)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	solvedNums := solve(nums)
-        fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
-        time.Sleep(10 * time.Second)
-	
-	err = press(solvedNums)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-/*	for _, row := range solvedNums {
-		for _, val := range row {
-			fmt.Printf("%-3d", val)
+	for range 3 {
+		filePaths, err := bigImg2smallImgs()
+		if err != nil {
+			fmt.Println(err)
+			return
 		}
-		fmt.Println()
-	}*/
+		nums, err := findNums(filePaths)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		solvedNums := solve(nums)
+		fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
+		time.Sleep(10 * time.Second)
+
+		err = press(solvedNums)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
 }
 
 func bigImg2smallImgs() (string, error) {
