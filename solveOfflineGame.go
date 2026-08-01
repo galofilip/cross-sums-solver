@@ -17,32 +17,74 @@ import (
 const startX = 44
 const startY = 582
 
-func main() {
-	filePaths, err := bigImg2smallImgs()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	nums, err := findNums(filePaths)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	solvedNums := solve(nums)
-	fmt.Println("in 10 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
-	time.Sleep(10 * time.Second)
+/*
+1. double tap to switch to game 	:)
+2. take screen shot(start of loop) 	:)
+3. scroll up				:)
+4. double tap to switch to termux	:)
+5. solve				:)
+6. double tap to switch to game		:)
+7. make press				:)
+8. scroll up				:)
+9. tap on 3 lines			:)
+10. scroll to delete game 
+11. press on circel
+12. press offlineGames in home
+13. press game
+14. start level(end loop)
+*/
 
-	err = press(solvedNums)
-	if err != nil {
-		fmt.Println(err)
-		return
+func main() {
+	fmt.Println("in 5 seconds a screen shot will be taken, make sure your phone will be on the cross-sum game")
+	time.Sleep(1 * time.Second)
+	touch(252, 2290)
+	time.Sleep(1 * time.Second)
+	touch(252, 2290)
+	time.Sleep(2 * time.Second)
+
+	for range 2 {
+		filePaths, err := bigImg2smallImgs()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		nums, err := findNums(filePaths)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		solvedNums := solve(nums)
+		fmt.Println("in 4 seconds your screen will be pressed, to press on nums please switch to the game to make the program work")
+		touch(252, 2290)
+		time.Sleep(1 * time.Second)
+		touch(252, 2290)
+		time.Sleep(2 * time.Second)
+
+		err = press(solvedNums)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		
+		scroll(550, 2334, 550, 2115)
+		time.Sleep(1 * time.Second)
+		touch(252, 2290)
+		time.Sleep(1 * time.Second)
+		scroll(1020, 1500, 1020, 500)
+
+		time.Sleep(1 * time.Second)
+		touch(540, 2290)
+		time.Sleep(1 * time.Second)
+		touch(950, 1100)
+		time.Sleep(4 * time.Second)
+
+		touch(815, 1950)
+		time.Sleep(1 * time.Second)
+		touch(575, 1900)
 	}
 }
 
 func bigImg2smallImgs() (string, error) {
-	fmt.Println("in 10 seconds a screen shot will be taken, make sure your phone will be on the cross-sum game")
-	time.Sleep(10 * time.Second)
-
 	out, err := os.Create("./sc.jepg")
 	if err != nil {
 		return "", err
@@ -56,6 +98,13 @@ func bigImg2smallImgs() (string, error) {
 		return "", err
 	}
 	fmt.Println("the screenshot has been taken successfully\nsolving...")
+	
+	scroll(550, 2334, 550, 2115)
+	time.Sleep(1 * time.Second)
+	touch(252, 2290)
+	time.Sleep(1 * time.Second)
+	touch(252, 2290)
+	time.Sleep(2 * time.Second)
 
 	dir := "./sc.jepg"
 //	dir := "/home/philips/Projects/goWork/big_3.jpg"
@@ -224,26 +273,21 @@ func press(solvedNums [9][9]int)(error){
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == -1 {
-				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*112+56), ", y: ", (startY+(i+1)*112+56))
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*112+56), strconv.Itoa(startY+(i+1)*112+56))
-				err := cmd.Run()
+				err := touch(startX+(j+1)*112+56, startY+(i+1)*112+56)
 				if err != nil {
 					return err
 				}
 			}
 		}
 	}
-	cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(612), strconv.Itoa(1850))
-	err := cmd.Run()
+	err := touch(612, 1850)
 	if err != nil {
 		return err
 	}
 	for i, row := range solvedNums[1:] {
 		for j, val := range row[1:] {
 			if val == 0 {
-				fmt.Println("i: ", i, ", j: ", j , " ,x: ", (startX+(j+1)*112+56), ", y: ", (startY+(i+1)*112+56))
-				cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(startX+(j+1)*112+56), strconv.Itoa(startY+(i+1)*112+56))
-				err := cmd.Run()
+				err := touch(startX+(j+1)*112+56, startY+(i+1)*112+56)
 				if err != nil {
 					return err
 				}
@@ -264,8 +308,14 @@ func con(solvedNums [9][9]int)(bool){
 	return false
 }
 
-//take image
-//enter numbers to arrays
+func touch(x, y int)(error){
+	cmd := exec.Command("adb", "shell", "input", "tap", strconv.Itoa(x), strconv.Itoa(y))
+	err := cmd.Run()
+	return err
+}
 
-//solve arrays
-//choose in app the right numbers and delete all wrong numbers
+func scroll(sX, sY, eX, eY int)(error){
+	cmd := exec.Command("adb", "shell", "input", "swipe", strconv.Itoa(sX), strconv.Itoa(sY), strconv.Itoa(eX), strconv.Itoa(eY), "200")
+	err := cmd.Run()
+	return err
+}
