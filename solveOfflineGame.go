@@ -27,11 +27,11 @@ const startY = 582
 7. make press				:)
 8. scroll up				:)
 9. tap on 3 lines			:)
-10. scroll to delete game 
-11. press on circel
-12. press offlineGames in home
-13. press game
-14. start level(end loop)
+10. scroll to delete game 		:)
+11. press on circel			:)
+12. press offlineGames in home		:)
+13. press game				:)
+14. start level(end loop)		:)
 */
 
 func main() {
@@ -66,6 +66,7 @@ func main() {
 			return
 		}
 		
+		time.Sleep(3 * time.Second)
 		scroll(550, 2334, 550, 2115)
 		time.Sleep(1 * time.Second)
 		touch(252, 2290)
@@ -76,10 +77,9 @@ func main() {
 		touch(540, 2290)
 		time.Sleep(1 * time.Second)
 		touch(950, 1100)
-		time.Sleep(4 * time.Second)
-
+		time.Sleep(7 * time.Second)
 		touch(815, 1950)
-		time.Sleep(1 * time.Second)
+		time.Sleep(2 * time.Second)
 		touch(575, 1900)
 	}
 }
