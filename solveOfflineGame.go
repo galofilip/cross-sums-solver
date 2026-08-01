@@ -66,7 +66,7 @@ func main() {
 			return
 		}
 		
-		time.Sleep(3 * time.Second)
+		time.Sleep(6 * time.Second)
 		scroll(550, 2334, 550, 2115)
 		time.Sleep(1 * time.Second)
 		touch(252, 2290)
@@ -77,7 +77,7 @@ func main() {
 		touch(540, 2290)
 		time.Sleep(1 * time.Second)
 		touch(950, 1100)
-		time.Sleep(7 * time.Second)
+		time.Sleep(6 * time.Second)
 		touch(815, 1950)
 		time.Sleep(2 * time.Second)
 		touch(575, 1900)
