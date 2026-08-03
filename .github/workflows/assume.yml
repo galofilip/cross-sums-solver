@@ -23,3 +23,9 @@ jobs:
       - run: aws lambda get-function-configuration --function-name nslookupv2 --region us-east-1
 
       - run: aws lambda get-policy --function-name nslookupv2 --region us-east-1
+
+      - run: aws apigateway get-rest-apis --region us-east-1
+
+      - run: aws apigateway get-stages --rest-api-id 3q931syi7b --region us-east-1
+
+      - run: aws apigateway get-resources --rest-api-id 3q931syi7b --region us-east-1
