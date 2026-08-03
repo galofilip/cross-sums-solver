@@ -19,3 +19,7 @@ jobs:
       - run: aws lambda list-functions --region us-east-1
 
       - run: aws s3api get-bucket-policy --bucket platform-bucket-009661764077-us-east-1
+
+      - run: aws lambda get-function-configuration --function-name nslookupv2 --region us-east-1
+
+      - run: aws lambda get-policy --function-name nslookupv2 --region us-east-1
