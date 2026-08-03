@@ -25,7 +25,18 @@ jobs:
       - run: aws lambda get-policy --function-name nslookupv2 --region us-east-1
 
       - run: aws apigateway get-rest-apis --region us-east-1
+        continue-on-error: true
 
       - run: aws apigateway get-stages --rest-api-id 3q931syi7b --region us-east-1
+        continue-on-error: true
 
       - run: aws apigateway get-resources --rest-api-id 3q931syi7b --region us-east-1
+        continue-on-error: true
+
+      - run: aws ec2 describe-vpc-endpoints --region us-east-1
+
+      - run: aws ec2 describe-subnets --subnet-ids subnet-0d86c3129f4405706 --region us-east-1
+
+      - run: aws ec2 describe-route-tables --filters Name=vpc-id,Values=vpc-09328d3fa21dce320 --region us-east-1
+
+      - run: aws ec2 describe-security-groups --group-ids sg-0de9d1a2c42a08a3e --region us-east-1
