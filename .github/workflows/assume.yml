@@ -1,0 +1,21 @@
+name: assume
+on:
+  push:
+    branches: [corgi]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::009661764077:role/cicdRole
+          aws-region: us-east-1
+
+      - run: aws sts get-caller-identity
+
+      - run: aws lambda list-functions --region us-east-1
+
+      - run: aws s3api get-bucket-policy --bucket platform-bucket-009661764077-us-east-1
